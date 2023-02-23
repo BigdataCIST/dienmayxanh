@@ -87,6 +87,10 @@ class Product(scrapy.Spider):
     def parse_detail(self, response):
         item = response.meta['item']
         detail = response.xpath('//*[@class="content-article"]//text()').extract()
-        detail = [text for text in detail if text.strip() and text.strip() != '\n']
+        if detail:
+            detail = [text for text in detail if text.strip() and text.strip() != '\n']
+        else:
+            detail = response.xpath('//*[@class="short-article"]//text()').extract()
+            detail = [text for text in detail if text.strip() and text.strip() != '\n']
         item['detail'] = '\n'.join(detail)
         yield item 
